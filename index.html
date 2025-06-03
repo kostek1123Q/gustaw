@@ -3,125 +3,306 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gustaw</title>
+  <title>Przeglądaj Produkty CNFans</title>
+
+  <!-- Normalize CSS (opcjonalnie, żeby zresetować style przeglądarki) -->
   <link
     rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    integrity="sha512-...TwójHash..."
+    href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+    integrity="sha512-oHDEc8XedkXj8ZQA3u8VUHcYDc0jX6wx44Yc4z5p+XqC0TMd0vCp1w4vGO0G0pMfzQ1txW/kZGG8qc7C2XhQ+Q=="
     crossorigin="anonymous"
     referrerpolicy="no-referrer"
   />
+
+  <!-- Google Fonts (opcjonalnie, aby dodać ładniejszą czcionkę) -->
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap"
+    rel="stylesheet"
+  />
+
   <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #ecf0f1;
+      --accent-color: #3498db;
+      --text-color: #2c3e50;
+      --card-bg: #ffffff;
+      --border-radius: 8px;
+      --transition-duration: 0.3s;
+      --shadow-light: rgba(0, 0, 0, 0.05);
+      --shadow-dark: rgba(0, 0, 0, 0.1);
+    }
+
+    /* Całościowe style dokumentu */
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to top, #ffe6f0, #ffffff);
-      overflow: hidden;
-      position: relative;
+      font-family: "Roboto", sans-serif;
+      background-color: var(--secondary-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
     header {
+      background-color: var(--primary-color);
+      padding: 1rem;
       text-align: center;
-      padding: 2rem 1rem;
-      color: #d63384;
+      color: var(--secondary-color);
     }
 
-    h1 {
-      font-size: 3rem;
+    header h1 {
       margin: 0;
-      font-weight: bold;
-      text-shadow: 1px 1px 3px #fff;
+      font-size: 1.75rem;
     }
 
-    .buttons {
-      display: flex;
-      justify-content: center;
+    /* Sekcja z wyszukiwaniem (opcjonalnie) */
+    #search-container {
+      margin: 1rem auto;
+      max-width: 600px;
+      width: 90%;
+      position: relative;
+    }
+
+    #search-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 2px solid var(--accent-color);
+      border-radius: var(--border-radius);
+      outline: none;
+      transition: border-color var(--transition-duration);
+    }
+
+    #search-input:focus {
+      border-color: darken(var(--accent-color), 10%);
+    }
+
+    /* Kontener na karty z produktami */
+    #items-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 1rem;
-      flex-wrap: wrap;
-      margin: 1rem;
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto 2rem auto;
     }
 
-    .btn {
-      background: #fff0f6;
-      color: #d63384;
-      border: 2px solid #ff99cc;
-      padding: 0.75rem 1.5rem;
-      font-size: 1.2rem;
-      border-radius: 30px;
+    /* Pojedyncza karta produktu */
+    .product-card {
+      background-color: var(--card-bg);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: 0 2px 5px var(--shadow-light);
+      transition: transform var(--transition-duration), box-shadow var(--transition-duration);
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
       text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
+      color: inherit;
     }
 
-    .btn:hover {
-      background: #ffd6e8;
-      transform: translateY(-2px);
+    .product-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 4px 12px var(--shadow-dark);
     }
 
-    .sakura-petal {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background-image: url('https://pngimg.com/uploads/cherry_blossom/cherry_blossom_PNG126.png');
-      background-size: cover;
-      opacity: 0.8;
-      animation: fall 10s linear infinite;
+    /* Obrazek produktu */
+    .product-image {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      background-color: #f0f0f0;
     }
 
-    @keyframes fall {
-      0% {
-        transform: translateY(-10vh) rotate(0deg);
-        opacity: 1;
+    /* Treść karty: nazwa + cena */
+    .product-info {
+      padding: 0.75rem 0.5rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .product-title {
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      flex-grow: 1;
+    }
+
+    .product-price {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent-color);
+    }
+
+    /* Styl dla komunikatu o ładowaniu */
+    #loading {
+      text-align: center;
+      margin: 2rem auto;
+      font-size: 1.1rem;
+      color: var(--primary-color);
+    }
+
+    /* Media queries dla responsywności – np. zmiana rozmiaru nagłówka na telefonach */
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.5rem;
       }
-      100% {
-        transform: translateY(110vh) rotate(360deg);
-        opacity: 0;
-      }
-    }
 
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 2rem;
-      }
-      .btn {
-        font-size: 1rem;
-        padding: 0.5rem 1rem;
+      #search-input {
+        font-size: 0.9rem;
       }
     }
   </style>
 </head>
-<body>
 
+<body>
   <header>
-    <h1>Gustaw</h1>
+    <h1>Produkty CNFans</h1>
   </header>
 
-  <div class="buttons">
-    <a href="https://discord.gg/HPyTv6mwsE" target="_blank" class="btn">
-      <i class="fab fa-discord"></i> Discord
-    </a>
-    <a href="https://youtube.com/" target="_blank" class="btn">
-      <i class="fab fa-youtube"></i> YouTube
-    </a>
-    <a href="https://instagram.com/" target="_blank" class="btn">
-      <i class="fab fa-instagram"></i> Instagram
-    </a>
+  <!-- Pole do wyszukiwania (opcjonalnie) -->
+  <div id="search-container">
+    <input
+      type="text"
+      id="search-input"
+      placeholder="Wyszukaj produkt (np. Stussy, New Balance)..."
+    />
   </div>
 
-  <!-- Sakura petals -->
+  <!-- Kontener, w którym zostaną wstrzyknięte karty produktów -->
+  <div id="items-container">
+    <div id="loading">Ładowanie produktów…</div>
+  </div>
+
+  <!-- Biblioteka PapaParse do pobierania i parsowania CSV z Google Sheets -->
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"
+    integrity="sha512-G5RZXP6KHYUVuSdXdBPXPHjmN+JpzoSQE32jDwJOd5ccwPVpajEbAUhD73HoPJUOeJ+9yBADvM+oopoCx9ljLw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script>
+
   <script>
-    const numPetals = 25;
-    for (let i = 0; i < numPetals; i++) {
-      const petal = document.createElement('div');
-      petal.classList.add('sakura-petal');
-      petal.style.left = Math.random() * 100 + 'vw';
-      petal.style.animationDelay = Math.random() * 10 + 's';
-      petal.style.animationDuration = 6 + Math.random() * 5 + 's';
-      document.body.appendChild(petal);
-    }
+    // Adres CSV z konkretną zakładką w naszym arkuszu CNFans
+    // Użyj ID arkusza: 1vGjajUSOg0GP9y8eLfpeVmNezDdiVYUP9gPf8i7FaLc
+    // GID zakładki "Clothing" (ubrania) to 297969240
+    const sheetURL = 
+      "https://docs.google.com/spreadsheets/d/1vGjajUSOg0GP9y8eLfpeVmNezDdiVYUP9gPf8i7FaLc/export?format=csv&gid=297969240";
+
+    // Gdy dokument się załaduje, odpalamy parsowanie CSV
+    document.addEventListener("DOMContentLoaded", () => {
+      const loadingEl = document.getElementById("loading");
+      const itemsContainer = document.getElementById("items-container");
+
+      Papa.parse(sheetURL, {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: function (results) {
+          // Po zakończeniu parsowania usuwamy komunikat "Ładowanie…"
+          if (loadingEl) loadingEl.remove();
+          const data = results.data;
+          displayItems(data);
+        },
+        error: function (err) {
+          if (loadingEl) loadingEl.textContent =
+            "Błąd podczas ładowania danych. Spróbuj ponownie później.";
+          console.error("PapaParse error:", err);
+        },
+      });
+
+      // Obsługa wyszukiwania na żywo
+      const searchInput = document.getElementById("search-input");
+      searchInput.addEventListener("input", () => {
+        const query = searchInput.value.trim().toLowerCase();
+        filterItems(query);
+      });
+
+      // Przechowamy elementy w tablicy, aby móc łatwo filtrować
+      let allCards = [];
+
+      function displayItems(data) {
+        // Czyścimy kontener (na wszelki wypadek)
+        itemsContainer.innerHTML = "";
+
+        data.forEach((item) => {
+          // Załóżmy, że w CSV mamy kolumny:
+          // "Name" – nazwa produktu
+          // "Price" – cena w USD (lub inna waluta)
+          // "Link" – link do CNFans (Weidian/Taobao/1688)
+          // "ImageQC" – URL do zdjęcia kontroli jakości (miniatura)
+          //
+          // Jeśli twoje nagłówki są inne, dostosuj je w poniższym kodzie.
+
+          const name = item["Name"] || item["Nazwa"] || "";
+          const price = item["Price"] || item["Cena"] || "";
+          const link = item["Link"] || item["URL"] || "";
+          const imageUrl =
+            item["ImageQC"] ||
+            item["imgQC"] ||
+            item["Zdjęcie"] ||
+            "https://via.placeholder.com/300";
+
+          // Tworzymy link-wrapping kartę produktu
+          const a = document.createElement("a");
+          a.href = link;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.className = "product-card";
+
+          // Obrazek produktu
+          const img = document.createElement("img");
+          img.src = imageUrl;
+          img.alt = name;
+          img.className = "product-image";
+          a.appendChild(img);
+
+          // Kontener na nazwę i cenę
+          const infoDiv = document.createElement("div");
+          infoDiv.className = "product-info";
+
+          const titleEl = document.createElement("div");
+          titleEl.className = "product-title";
+          titleEl.textContent = name;
+          infoDiv.appendChild(titleEl);
+
+          const priceEl = document.createElement("div");
+          priceEl.className = "product-price";
+          priceEl.textContent = price ? price + " USD" : "";
+          infoDiv.appendChild(priceEl);
+
+          a.appendChild(infoDiv);
+
+          // Dodajemy do kontenera głównego
+          itemsContainer.appendChild(a);
+
+          // Przechowujemy referencję do karty oraz metadane (nazwę), aby filtrować
+          allCards.push({
+            element: a,
+            name: name.toLowerCase(),
+          });
+        });
+      }
+
+      // Funkcja filtrująca karty na podstawie frazy z wyszukiwarki
+      function filterItems(query) {
+        allCards.forEach((cardObj) => {
+          if (cardObj.name.includes(query)) {
+            cardObj.element.style.display = "flex";
+          } else {
+            cardObj.element.style.display = "none";
+          }
+        });
+      }
+    });
   </script>
 </body>
 </html>
